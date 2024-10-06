@@ -19,12 +19,32 @@ def log_error(message: str):
     """
     print(f"{Fore.RED} [ERROR] {message}")
 
-def visualize_directory_structure(dir_path: str):
+# def visualize_directory_structure(dir_path: str):
+#     """
+#     Візуалізує структуру директорії, відображаючи файли та піддиректорії з використанням кольорів.
+    
+#     Аргументи:
+#         dir_path (str): Шлях до директорії.
+#     """
+#     path = Path(dir_path)
+
+#     if not path.is_dir():
+#         log_error(f"{dir_path} не є дійсною директорією.")
+#         return
+
+#     for item in path.rglob("*"):
+#         if item.is_dir():
+#             print(Fore.BLUE + f"Папка: {item}")
+#         else:
+#             print(Fore.GREEN + f"Файл: {item}")
+
+def visualize_directory_structure(dir_path: str, level: int = 0):
     """
-    Візуалізує структуру директорії, відображаючи файли та піддиректорії з використанням кольорів.
+    Рекурсивно візуалізує структуру директорії, відображаючи файли та піддиректорії з відступами.
     
     Аргументи:
         dir_path (str): Шлях до директорії.
+        level (int): Поточний рівень вкладеності (для відступів).
     """
     path = Path(dir_path)
 
@@ -32,8 +52,11 @@ def visualize_directory_structure(dir_path: str):
         log_error(f"{dir_path} не є дійсною директорією.")
         return
 
-    for item in path.rglob("*"):
+    indent = "    " * level  # Відступ для вкладеності
+
+    for item in path.iterdir():
         if item.is_dir():
-            print(Fore.BLUE + f"Папка: {item}")
+            print(Fore.BLUE + f"{indent}{item.name}")
+            visualize_directory_structure(item, level + 1)  # Рекурсивний виклик для вкладених папок
         else:
-            print(Fore.GREEN + f"Файл: {item}")
+            print(Fore.GREEN + f"{indent}{item.name}")
